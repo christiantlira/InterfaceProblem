@@ -1,5 +1,5 @@
 package model.services;
 
 public interface InstallmentsService {
-	double installments(double amount);
+	double installments(double amount, int parcels);
 }
