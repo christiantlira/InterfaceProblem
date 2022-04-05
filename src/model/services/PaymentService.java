@@ -2,6 +2,7 @@ package model.services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import entities.Contract;
@@ -25,17 +26,19 @@ public class PaymentService {
 	}
 
 	public void processInstallments(Contract contract) throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		for (int i = 1; i <= parcels; i++) {
-			int year = contract.getContractDate().getYear();
-			int month = contract.getContractDate().getMonth() + i;
-			int day = contract.getContractDate().getDay();
-			String date = day + "/" + month + "/" + year;
-			Date dueDate = sdf.parse(date);
+			Date dueDate = addMonths(contract.getContractDate(), i);
 
 			double amount = installmentsServices.installments(totalValue / parcels, i);
 			contract.getInstallments().add(new Installment(dueDate, amount));
 		}
+	}
+	
+	public Date addMonths(Date date, int N) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.MONTH, N);
+		return calendar.getTime();
 	}
 
 }
